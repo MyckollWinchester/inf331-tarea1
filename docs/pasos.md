@@ -1,7 +1,7 @@
 # Lista de Tareas - Proyecto de Inventario
 
 ## Paso 1: Comprensión del Requerimiento
-- [ ] Revisa los requerimientos del cliente.
+- [x] Revisa los requerimientos del cliente.
 - [ ] Identifica posibles ambigüedades en el requerimiento.
 - [ ] Haz preguntas en el foro si es necesario.
 - [ ] Haz supuestos razonables donde sea necesario.

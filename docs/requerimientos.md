@@ -35,7 +35,8 @@ El sistema debe generar los siguientes reportes en consola:
 - **Lista de productos agotados**.
 
 ## **5. Autenticación**
-Los usuarios se manejarán en SQLite.
+Se implementará un sistema de autenticación para gestionar los usuarios. Los datos de los usuarios se almacenarán en una base de datos SQLite. 
+El proceso incluirá un registro de nuevos usuarios, donde se almacenarán sus credenciales de manera segura.
 
 ### **Tabla `usuarios`**
 | Campo      | Tipo      | Restricciones                              |
@@ -45,7 +46,7 @@ Los usuarios se manejarán en SQLite.
 | `password` | TEXT    | Obligatorio, almacenado en hash         |
 
 ### **Requisitos de Autenticación**
-- Se pedirá **nombre de usuario y contraseña** al inicio.
+- Se pedirá **nombre de usuario y contraseña**.
 - Se permitirán **3 intentos** antes de bloquear el acceso temporalmente.
 - Contraseñas almacenadas de forma segura con **hashing (`bcrypt`)**.
 

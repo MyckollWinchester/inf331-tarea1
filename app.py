@@ -1,11 +1,13 @@
-from flask import Flask
+from flask import Flask, jsonify
 from src.routes.product_routes import product_bp
-from src.routes.user_routes import user_bp
 
 app = Flask(__name__)
 
 app.register_blueprint(product_bp)
-app.register_blueprint(user_bp)
+
+@app.get('/ping')
+def ping():
+    return jsonify({'message': 'pong'})
 
 if __name__ == '__main__':
     app.run(debug=True)

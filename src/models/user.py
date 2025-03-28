@@ -1,5 +1,5 @@
 import sqlite3
-import hashlib
+import bcrypt
 
 class UserModel:
     def __init__(self, db_path='database.db'):
@@ -19,14 +19,24 @@ class UserModel:
         self.conn.commit()
 
     def hash_password(self, password: str) -> str:
-        """Hashes the password using SHA-256."""
-        return hashlib.sha256(password.encode()).hexdigest()
+        """Hashes the password using bcrypt."""
+        return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
     def create_user(self, username: str, password: str):
         hashed_password = self.hash_password(password)
         query = "INSERT INTO usuarios (usuario, password) VALUES (?, ?)"
         self.cursor.execute(query, (username, hashed_password))
         self.conn.commit()
+
+    def authenticate_user(self, username: str, password: str) -> bool:
+        """Authenticates a user by verifying the password."""
+        query = "SELECT password FROM usuarios WHERE usuario = ?"
+        self.cursor.execute(query, (username,))
+        result = self.cursor.fetchone()
+        if result:
+            stored_password = result[0]
+            return bcrypt.checkpw(password.encode(), stored_password.encode())
+        return False
 
     def close_connection(self):
         self.conn.close()

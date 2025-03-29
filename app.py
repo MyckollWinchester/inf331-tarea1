@@ -1,12 +1,12 @@
 import requests
 
-API_URL = "http://127.0.0.1:5000"
+API_URL = "http://127.0.0.1:5000/api"
 
 def main():
-    # user_model = UserModel()
     print("Bienvenido al sistema de autenticación.")
-    # while True:
-    if False:
+    logged_in = False  # Bandera para verificar si el usuario ha iniciado sesión
+
+    while not logged_in:  # Bucle para autenticación y registro
         print("\nOpciones:")
         print("1. Registrar nuevo usuario")
         print("2. Iniciar sesión")
@@ -16,31 +16,46 @@ def main():
         if choice == '1':
             username = input("Ingrese un nombre de usuario: ")
             password = input("Ingrese una contraseña: ")
-            # try:
-            #     user_model.create_user(username, password)
-            #     print("Usuario registrado exitosamente.")
-            # except sqlite3.IntegrityError:
-                # print("Error: El nombre de usuario ya existe.")
+            response = requests.post(f"{API_URL}/users", json={
+                "usuario": username,
+                "password": password
+            })
+
+            if response.status_code == 201:
+                print("Usuario registrado exitosamente.")
+            else:
+                try:
+                    error_message = response.json().get('error', 'Error desconocido')
+                except requests.exceptions.JSONDecodeError:
+                    error_message = "Error desconocido (respuesta no válida del servidor)"
+                print(f"Error: {error_message}")
         elif choice == '2':
             username = input("Ingrese su nombre de usuario: ")
-            attempts = 0
-            while attempts < 3:
+            while True:
                 password = input("Ingrese su contraseña: ")
-                # if user_model.authenticate_user(username, password):
-                #     print("Inicio de sesión exitoso.")
-                #     break
-                # else:
-                #     attempts += 1
-                #     print(f"Contraseña incorrecta. Intentos restantes: {3 - attempts}")
-            else:
-                print("Demasiados intentos fallidos. Acceso bloqueado temporalmente.")
+                response = requests.post(f"{API_URL}/users/authenticate", json={
+                    "usuario": username,
+                    "password": password
+                })
+
+                if response.status_code == 200:
+                    print("Inicio de sesión exitoso.")
+                    logged_in = True  # Cambiar la bandera para salir del bucle
+                    break
+                elif response.status_code == 403:
+                    print(response.json().get('error', 'Usuario bloqueado temporalmente. Intente más tarde.'))
+                    break
+                elif response.status_code == 401:
+                    print(response.json().get('error', 'Credenciales incorrectas.'))
+                else:
+                    print("Error desconocido. Intente nuevamente.")
         elif choice == '3':
             print("Saliendo del sistema.")
-            exit()
+            return  # Salir completamente del programa
         else:
             print("Opción no válida. Intente nuevamente.")
-    print("Usuario autenticado.")
-    
+
+    # Segundo bucle: Opciones de productos
     while True:
         print("\nOpciones:")
         print("1. Crear producto")

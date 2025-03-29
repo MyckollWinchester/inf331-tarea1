@@ -1,0 +1,26 @@
+29/03/2025 14:24:30 INFO: Inicio de la aplicación.
+29/03/2025 14:24:34 WARNING: Credenciales incorrectas para el usuario: a
+29/03/2025 14:24:36 WARNING: Credenciales incorrectas para el usuario: a
+29/03/2025 14:24:38 WARNING: Usuario bloqueado temporalmente: a
+29/03/2025 14:24:48 INFO: Usuario registrado exitosamente: d
+29/03/2025 14:24:51 INFO: Inicio de sesión exitoso para el usuario: d
+29/03/2025 14:24:55 ERROR: Error al crear el producto: 1
+29/03/2025 14:25:08 ERROR: Error al crear el producto: 5
+29/03/2025 14:25:08 WARNING: Opción no válida seleccionada en el menú de productos.
+29/03/2025 14:25:54 ERROR: Error al crear el producto: a
+29/03/2025 14:28:31 INFO: Inicio de la aplicación.
+29/03/2025 14:28:43 INFO: Inicio de la aplicación.
+29/03/2025 14:28:48 WARNING: Credenciales incorrectas para el usuario: s
+29/03/2025 14:28:49 WARNING: Credenciales incorrectas para el usuario: s
+29/03/2025 14:28:50 WARNING: Usuario bloqueado temporalmente: s
+29/03/2025 14:29:01 INFO: Usuario registrado exitosamente: a
+29/03/2025 14:29:05 INFO: Inicio de sesión exitoso para el usuario: a
+29/03/2025 14:29:18 INFO: Producto creado exitosamente: a
+29/03/2025 14:29:30 ERROR: Error al crear el producto: a
+29/03/2025 14:30:06 INFO: El usuario salió del menú de productos.
+29/03/2025 14:31:02 INFO: Inicio de la aplicación.
+29/03/2025 14:31:07 INFO: Usuario registrado exitosamente: a
+29/03/2025 14:31:12 INFO: Inicio de sesión exitoso para el usuario: a
+29/03/2025 14:31:30 INFO: Producto creado exitosamente: cmaa
+29/03/2025 14:31:46 INFO: Producto creado exitosamente: cosa
+29/03/2025 14:31:48 INFO: El usuario salió del menú de productos.

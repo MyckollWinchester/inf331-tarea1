@@ -88,7 +88,6 @@ class Database:
     def create_product(self, nombre: str, descripcion: str, cantidad: int, precio: int, categoria: str):
         db = get_db()
         cursor = db.cursor()
-
         query = """
         INSERT INTO productos (nombre, descripcion, cantidad, precio, categoria)
         VALUES (?, ?, ?, ?, ?)
@@ -97,29 +96,64 @@ class Database:
         db.commit()
     
     def get_product_by_id(self, product_id: int):
+        db = get_db()
+        cursor = db.cursor()
         query = "SELECT * FROM productos WHERE id = ?"
-        self.cursor.execute(query, (product_id,))
-        return self.cursor.fetchone()
+        cursor.execute(query, (product_id,))
+        product = cursor.fetchone()
+        if product:
+            return dict(product)
+        return None
     
     def get_product_by_name(self, nombre: str):
+        db = get_db()
+        cursor = db.cursor()
         query = "SELECT * FROM productos WHERE nombre = ?"
-        self.cursor.execute(query, (nombre,))
-        return self.cursor.fetchone()
-    
+        cursor.execute(query, (nombre,))
+        product = cursor.fetchone()
+        if product:
+            return dict(product)
+        return None
+
     def get_all_products(self):
+        db = get_db()
+        cursor = db.cursor()
         query = "SELECT * FROM productos"
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        cursor.execute(query)
+        products = cursor.fetchall()
+        return [dict(row) for row in products]
     
     def get_products_by_category(self, categoria: str):
+        db = get_db()
+        cursor = db.cursor()
         query = "SELECT * FROM productos WHERE categoria = ?"
-        self.cursor.execute(query, (categoria,))
-        return self.cursor.fetchall()
+        cursor.execute(query, (categoria,))
+        products = cursor.fetchall()
+        if products:
+            return [dict(row) for row in products]
+        else:
+            return None
     
     def get_out_of_stock_products(self):
+        db = get_db()
+        cursor = db.cursor()
         query = "SELECT * FROM productos WHERE cantidad = 0"
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        cursor.execute(query)
+        products = cursor.fetchall()
+        if products:
+            return [dict(row) for row in products]
+        else:
+            return None
+    
+    def get_inventory_value(self):
+        db = get_db()
+        cursor = db.cursor()
+        query = """
+        SELECT SUM(cantidad * precio) AS total_value FROM productos
+        """
+        cursor.execute(query)
+        result = cursor.fetchone()
+        return result[0] if result else 0
 
     def update_product(self, product_id: int, new_data: dict):
         """
@@ -130,14 +164,20 @@ class Database:
         { "nombre": "Gansito", "precio": 800 }
         ```
         """
+        db = get_db()
+        cursor = db.cursor()
         set_clause = ', '.join([f"{key} = ?" for key in new_data.keys()])
         values = list(new_data.values())
         values.append(product_id)
         query = f"UPDATE productos SET {set_clause} WHERE id = ?"
-        self.cursor.execute(query, values)
-        self.conn.commit()
-    
+        cursor.execute(query, values)
+        db.commit()
+        return cursor.rowcount > 0
+
     def delete_product(self, product_id: int):
+        db = get_db()
+        cursor = db.cursor()
         query = "DELETE FROM productos WHERE id = ?"
-        self.cursor.execute(query, (product_id,))
-        self.conn.commit()
+        cursor.execute(query, (product_id,))
+        db.commit()
+        return cursor.rowcount > 0

@@ -59,6 +59,15 @@ def main():
     while True:
         print("\nOpciones:")
         print("1. Crear producto")
+        # después hacer un solo submenú para listar productos (2, 3, 4 y 5)
+        print("2. Listar productos")
+        print("3. Buscar producto por ID")
+        print("4. Buscar producto por nombre")
+        print("5. Buscar productos por categoría")
+        print("6. Listar productos sin stock")
+        print("7. Actualizar producto")
+        print("8. Eliminar producto")
+        print("9. Valor total del inventario")
         print("0. Salir")
 
         choice = input("Seleccione una opción: ")
@@ -81,7 +90,119 @@ def main():
                 print("Producto creado exitosamente.")
             else:
                 print("Error al crear el producto.")
+        elif choice == '2':
+            response = requests.get(f"{API_URL}/products")
+            if response.status_code == 200:
+                products = response.json()
+                print("Lista de productos:")
+                for product in products:
+                    print(product)
+            else:
+                print("Error al obtener la lista de productos.")
+        elif choice == '3':
+            product_id = int(input("Ingrese el ID del producto: "))
+            response = requests.get(f"{API_URL}/products/{product_id}")
+            if response.status_code == 200:
+                product = response.json()
+                print("Producto encontrado:", product)
+            else:
+                print("Error al obtener el producto.")
+        elif choice == '4':
+            nombre = input("Ingrese el nombre del producto: ")
+            response = requests.get(f"{API_URL}/products/name/{nombre}")
+            if response.status_code == 200:
+                product = response.json()
+                print("Producto encontrado:", product)
+            else:
+                print("Error al obtener el producto.")
+        elif choice == '5':
+            categoria = input("Ingrese la categoría del producto: ")
+            response = requests.get(f"{API_URL}/products/category/{categoria}")
+            if response.status_code == 200:
+                products = response.json()
+                for product in products:
+                    print(product)
+                if not products:
+                    print("No se encontraron productos en esta categoría.")
+            else:
+                print("Error al obtener los productos.")
+        elif choice == '6':
+            response = requests.get(f"{API_URL}/products/out_of_stock")
+            if response.status_code == 200:
+                products = response.json()
+                print("Productos sin stock:")
+                for product in products:
+                    print(product)
+            else:
+                print("Error al obtener los productos sin stock.")
+        elif choice == '7':
+            product_id = int(input("Ingrese el ID del producto a actualizar: "))
+            response = requests.get(f"{API_URL}/products/{product_id}")
+            if response.status_code != 200:
+                print("No se encontró el producto para el ID proporcionado.")
+                continue
+            product = response.json()
+            while True:
+                print("Producto actual:", product)
 
+                print("Campos disponibles para actualizar:")
+                print("1. Nombre")
+                print("2. Descripción")
+                print("3. Cantidad")
+                print("4. Precio")
+                print("5. Categoría")
+                print("0. Terminar actualización")
+
+                field_choice = input("Seleccione el campo a actualizar: ")
+                if field_choice == '1':
+                    product['nombre'] = input("Ingrese el nuevo nombre del producto: ")
+                elif field_choice == '2':
+                    product['descripcion'] = input("Ingrese la nueva descripción del producto: ")
+                elif field_choice == '3':
+                    try:
+                        new_value = int(input("Ingrese la nueva cantidad del producto: "))
+                    except ValueError:
+                        print("Error: La cantidad debe ser un número entero.")
+                        continue
+                    if new_value < 0:
+                        print("Error: La cantidad no puede ser negativa.")
+                        continue
+                    product['cantidad'] = new_value
+                elif field_choice == '4':
+                    try:
+                        new_value = int(input("Ingrese el nuevo precio del producto: "))
+                    except ValueError:
+                        print("Error: El precio debe ser un número entero.")
+                        continue
+                    if new_value < 0:
+                        print("Error: El precio no puede ser negativo.")
+                        continue
+                    product['precio'] = new_value
+                elif field_choice == '5':
+                    product['categoria'] = input("Ingrese la nueva categoría del producto: ")
+                elif field_choice == '0':
+                    break
+                else:
+                    print("Opción no válida. Intente nuevamente.")
+            response = requests.put(f"{API_URL}/products/{product_id}", json=product)
+            if response.status_code == 200:
+                print("Producto actualizado exitosamente.")
+            else:
+                print("Nombre de producto en conflicto con otro existente.")
+        elif choice == '8':
+            product_id = int(input("Ingrese el ID del producto a eliminar: "))
+            response = requests.delete(f"{API_URL}/products/{product_id}")
+            if response.status_code == 200:
+                print("Producto eliminado exitosamente.")
+            else:
+                print("Error al eliminar el producto.")
+        elif choice == '9':
+            response = requests.get(f"{API_URL}/products/inventory_value")
+            if response.status_code == 200:
+                total_value = response.json().get('total_inventory_value', 0)
+                print(f"Valor total del inventario: {total_value}")
+            else:
+                print("Error al obtener el valor total del inventario.")
         elif choice == '0':
             print("Saliendo del sistema.")
             break

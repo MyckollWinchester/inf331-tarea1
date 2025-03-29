@@ -5,7 +5,7 @@ from src.database import close_db
 
 app = Flask(__name__)
 
-app.register_blueprint(product_bp, url_prefix='/api/products')  # Agregar prefijo '/api/products'
+app.register_blueprint(product_bp)
 app.register_blueprint(user_bp, url_prefix='/api')
 
 @app.teardown_appcontext

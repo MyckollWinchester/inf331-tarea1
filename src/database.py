@@ -68,8 +68,10 @@ class Database:
     def create_user(self, username: str, password: str):
         hashed_password = auth.hash_password(password)
         query = "INSERT INTO usuarios (usuario, password) VALUES (?, ?)"
-        self.cursor.execute(query, (username, hashed_password))
-        self.conn.commit()
+        with sqlite3.connect('database.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute(query, (username, hashed_password))
+            conn.commit()
 
     def authenticate_user(self, username: str, password: str) -> bool:
         """Authenticates a user by verifying the password."""

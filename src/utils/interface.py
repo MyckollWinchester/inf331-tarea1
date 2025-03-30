@@ -6,6 +6,12 @@ def show_menu(options: list, title: str, exit: str = 'Salir'):
         print(f"0. {exit}")
     print("\nSeleccione una opción:", end=' ')
 
+# Usuarios
+def show_auth_menu():
+    title = "Credenciales"
+    options = ["Registrar nuevo usuario", "Iniciar sesión"]
+    show_menu(options, title)
+
 # Productos
 def show_products_menu():
     title = "Gestor de Productos"

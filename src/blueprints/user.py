@@ -40,7 +40,7 @@ def authenticate_user():
 
     # Verificar si el usuario está bloqueado
     if username in login_attempts:
-        attempts, block_time = login_attempts[username]
+        _, block_time = login_attempts[username]
         if block_time and datetime.now() < block_time:
             return jsonify({"error": "Usuario bloqueado temporalmente. Intente más tarde."}), 403
 

@@ -20,6 +20,8 @@ def create_product():
 def get_all_products():
     db = Database()
     products = db.get_all_products()
+    if not products:
+        return jsonify({'message': 'No products found'}), 404
     return jsonify(products), 200
 
 @product_bp.get('/<int:product_id>')
@@ -28,7 +30,7 @@ def get_product_by_id(product_id):
     product = db.get_product_by_id(product_id)
     if product:
         return jsonify(product), 200
-    return jsonify({'error': 'Product not found'}), 404
+    return jsonify({'message': 'Product not found'}), 404
 
 @product_bp.get('/name/<string:nombre>')
 def get_product_by_name(nombre):
@@ -36,7 +38,7 @@ def get_product_by_name(nombre):
     product = db.get_product_by_name(nombre)
     if product:
         return jsonify(product), 200
-    return jsonify({'error': 'Product not found'}), 404
+    return jsonify({'message': 'Product not found'}), 404
 
 @product_bp.get('/category/<string:categoria>')
 def get_products_by_category(categoria):

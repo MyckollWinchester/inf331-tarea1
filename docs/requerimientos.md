@@ -26,7 +26,6 @@ El sistema debe permitir gestionar productos en una base de datos SQLite con la 
 ## **3. Filtrado y Búsqueda**
 - **Buscar productos** por **nombre o ID**.
 - **Filtrar productos** por **categoría**.
-- **Listar productos agotados** (cantidad en 0).
 
 ## **4. Generación de Reportes**
 El sistema debe generar los siguientes reportes en consola:

@@ -62,6 +62,14 @@ class Database:
     
     def close_connection(self):
         self.conn.close()
+    
+    def drop_all_tables(self):
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("DROP TABLE IF EXISTS usuarios")
+        cursor.execute("DROP TABLE IF EXISTS productos")
+        db.commit()
+        db.close()
 
     # USER METHODS
     

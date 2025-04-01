@@ -1,9 +1,11 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 from src.database import Database
 
 product_bp = Blueprint('products', __name__, url_prefix='/api/products')
 
 @product_bp.post('/')
+@jwt_required()
 def create_product():
     db = Database()
     product = request.json
@@ -14,14 +16,15 @@ def create_product():
         precio      = product['precio'],
         categoria   = product['categoria']
     )
-    return jsonify(product), 201
+    return jsonify({"message": "Producto creado exitosamente"}), 201
 
 @product_bp.get('/')
+@jwt_required()
 def get_all_products():
     db = Database()
     products = db.get_all_products()
     if not products:
-        return jsonify({'message': 'No products found'}), 404
+        return jsonify({"message": "No hay productos disponibles"}), 404
     return jsonify(products), 200
 
 @product_bp.get('/<int:product_id>')

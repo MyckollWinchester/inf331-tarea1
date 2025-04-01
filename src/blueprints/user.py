@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import create_access_token
 from src.database import Database
 from datetime import datetime, timedelta
 from sqlite3 import IntegrityError
@@ -29,7 +30,7 @@ def create_user():
 
 @user_bp.route('/users/authenticate', methods=['POST'])
 def authenticate_user():
-    """Endpoint para autenticar un usuario."""
+    """Endpoint para autenticar un usuario y generar un token JWT."""
     db = Database()
     data = request.get_json()
     username = data.get('usuario')
@@ -49,7 +50,10 @@ def authenticate_user():
         # Restablecer intentos fallidos en caso de éxito
         if username in login_attempts:
             del login_attempts[username]
-        return jsonify({"message": "Inicio de sesión exitoso"}), 200
+
+        # Generar un token JWT con una duración de 15 minutos
+        access_token = create_access_token(identity=username, expires_delta=timedelta(minutes=15))
+        return jsonify({"message": "Inicio de sesión exitoso", "access_token": access_token}), 200
     else:
         # Incrementar intentos fallidos
         if username not in login_attempts:

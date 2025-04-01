@@ -3,6 +3,7 @@ from src.utils.logs import logger
 from src.utils.interface import *
 
 API_URL = "http://127.0.0.1:5000/api"
+TOKEN = None  # Variable global para almacenar el token JWT
 
 def main():
     logger.info("Inicio de la aplicación.")
@@ -96,6 +97,7 @@ def register_user():
         print("Error del servidor al registrar el usuario.")
 
 def authenticate_user() -> bool:
+    global TOKEN
     username = input("Ingrese su nombre de usuario: ")
     password = input("Ingrese su contraseña: ")
     
@@ -105,6 +107,8 @@ def authenticate_user() -> bool:
     })
 
     if response.status_code == 200:
+        data = response.json()
+        TOKEN = data["access_token"]  # Guardar el token JWT
         logger.info(f"Inicio de sesión exitoso para el usuario: {username}")
         print("Inicio de sesión exitoso.")
         return True
@@ -128,6 +132,8 @@ def authenticate_user() -> bool:
 # PRODUCTOS
 
 def create_product():
+    global TOKEN
+    headers = {"Authorization": f"Bearer {TOKEN}"}
     nombre = input("Nombre: ")
     descripcion = input("Descripción: ")
     try:
@@ -154,7 +160,7 @@ def create_product():
         "cantidad": cantidad,
         "precio": precio,
         "categoria": categoria
-    })
+    }, headers=headers)
 
     if response.status_code == 201:
         logger.info(f"Producto creado exitosamente.")

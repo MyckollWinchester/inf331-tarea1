@@ -10,7 +10,7 @@ El sistema debe permitir gestionar productos en una base de datos SQLite con la 
 | `nombre`    | TEXT     | Obligatorio, máximo 100 caracteres, único     |
 | `descripcion` | TEXT   | Opcional, máximo 255 caracteres               |
 | `cantidad`  | INTEGER  | Obligatorio, mínimo 0                         |
-| `precio`    | REAL     | Obligatorio, mínimo 0.01                      |
+| `precio`    | INTEGER     | Obligatorio, mínimo 0                         |
 | `categoria` | TEXT     | Obligatorio, debe pertenecer a una lista predefinida |
 
 ### **Operaciones CRUD**

@@ -7,6 +7,18 @@ product_bp = Blueprint('products', __name__, url_prefix='/api/products')
 def create_product():
     db = Database()
     product = request.json
+
+    if not all(key in product for key in ['nombre', 'descripcion', 'cantidad', 'precio', 'categoria']):
+        return jsonify({'message': 'missing fields'}), 400
+    if not isinstance(product['cantidad'], int) or not isinstance(product['precio'], int):
+        return jsonify({'message': 'invalid data'}), 400
+    if not isinstance(product['nombre'], str) or not isinstance(product['descripcion'], str) or not isinstance(product['categoria'], str):
+        return jsonify({'message': 'invalid data'}), 400
+    if product['cantidad'] < 0 or product['precio'] < 0:
+        return jsonify({'message': 'invalid data'}), 400
+    if db.get_product_by_name(product['nombre']):
+        return jsonify({'message': 'product already exists'}), 403
+
     db.create_product(
         nombre      = product['nombre'],
         descripcion = product['descripcion'],
@@ -14,6 +26,7 @@ def create_product():
         precio      = product['precio'],
         categoria   = product['categoria']
     )
+
     return jsonify(product), 201
 
 @product_bp.get('/')
